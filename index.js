@@ -25,6 +25,7 @@ import DatasakitRoute from "./routes/datasakit_pegawai/DatasakitRoute.js";
 import HomevisitRoute from "./routes/datasakit_pegawai/HomevisitRoute.js";
 import TotalPenyakitRoute from "./routes/data_statistik/TotalPenyakitRoute.js";
 import DeletedataobatModel from "./routes/itemobat_apoteker/DeletedataobatRoute.js";
+import morgan from "morgan"; // Middleware logging
 
 dotenv.config();
 const app = express();
@@ -46,7 +47,6 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
       httpOnly: true,
-      partitioned: true,
     },
   })
 );
@@ -55,6 +55,9 @@ app.use(
   await db.sync();
   await store.sync();
 })();
+
+// Middleware logging
+app.use(morgan("dev"));
 
 app.use(
   cors({
