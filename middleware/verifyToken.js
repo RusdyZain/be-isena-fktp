@@ -3,15 +3,16 @@ import jwt from "jsonwebtoken";
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
+
   if (!token) {
     console.log("Token tidak ditemukan di header");
-    return res.sendStatus(401).json({ message: "Token tidak ditemukan" });
+    return res.status(401).json({ message: "Token tidak ditemukan" });
   }
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       console.log("Gagal memverifikasi token:", err);
-      return res.sendStatus(403).json({ message: "Gagal memverifikasi token" });
+      return res.status(403).json({ message: "Gagal memverifikasi token" });
     }
 
     req.username = decoded.username;
