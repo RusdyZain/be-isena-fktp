@@ -61,7 +61,7 @@ export const postLogin = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: "lax",
-      secure: false,
+      secure: true,
     });
 
     req.session.save((err) => {
