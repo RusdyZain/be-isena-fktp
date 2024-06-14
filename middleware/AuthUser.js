@@ -1,19 +1,18 @@
 import jwt from "jsonwebtoken";
 import Users from "../models/UserModel.js";
 
-export const verifyUser = async (req, res, next) => {
-  if (!req.session.userId) {
-    return res.status(401).json({ msg: "Please login in your account!" });
-  }
-  const user = await Users.findOne({
-    where: {
-      uuid: req.session.userId,
-    },
+const verifyToken = (req, res, next) => {
+  const token = req.headers["authorization"]?.split(" ")[1];
+  if (!token) return res.status(401).json({ msg: "No token provided" });
+
+  jwt.verify(token, "your-secret-key", (err, decoded) => {
+    if (err)
+      return res.status(403).json({ msg: "Failed to authenticate token" });
+
+    req.userId = decoded.id;
+    req.role = decoded.role;
+    next();
   });
-  if (!user) return res.status(404).json({ msg: "User not found" });
-  req.userId = user.id;
-  req.role = user.role;
-  next();
 };
 
 export const klinikOnly = async (req, res, next) => {
