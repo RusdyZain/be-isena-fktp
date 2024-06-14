@@ -64,6 +64,8 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+
+// Gunakan semua route yang Anda miliki di sini
 app.use(UserRoute);
 app.use(AuthRoute);
 app.use(PasienRoute);
