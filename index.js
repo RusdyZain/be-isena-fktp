@@ -59,7 +59,7 @@ app.use(
 app.use(
   cors({
     credentials: true,
-    origin: "https://isena-fktp-1gvwdiy9m-isena-fktp.vercel.app/",
+    origin: "https://isena-fktp.vercel.app",
   })
 );
 
