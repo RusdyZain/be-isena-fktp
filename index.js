@@ -29,11 +29,10 @@ import DeletedataobatModel from "./routes/itemobat_apoteker/DeletedataobatRoute.
 dotenv.config();
 const app = express();
 
-// SequelizeStore initialization
 const SequelizeSessionStore = SequelizeStore(session.Store);
 
 const store = new SequelizeSessionStore({
-  db: db, // Ensure db is the Sequelize instance
+  db: db,
 });
 
 app.use(
@@ -43,17 +42,17 @@ app.use(
     saveUninitialized: false,
     store: store,
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: true, // Set to true if using HTTPS
-      sameSite: "lax", // Consider "lax" or "none" if secure: true
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: false,
+      sameSite: "lax",
       httpOnly: true,
     },
   })
 );
 
 (async () => {
-  await db.sync(); // Sync database models
-  await store.sync(); // Sync session store
+  await db.sync();
+  await store.sync();
 })();
 
 app.use(
