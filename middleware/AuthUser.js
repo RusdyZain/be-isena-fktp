@@ -3,6 +3,7 @@ import Users from "../models/UserModel.js";
 
 export const verifyUser = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
+  console.log("authorizationHeader", authorizationHeader);
 
   if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
     return res.status(401).json({ msg: "Please login in your account!" });
