@@ -41,6 +41,7 @@ app.use(
     credentials: true,
     origin: "https://isena-fktp.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -67,6 +68,7 @@ app.use(
 })();
 
 // 4. Use JSON and cookie parser middleware
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
