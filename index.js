@@ -43,7 +43,7 @@ app.use(
     store: store,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
-      secure: false,
+      secure: true,
       sameSite: "none",
       httpOnly: true,
     },
@@ -58,7 +58,8 @@ app.use(
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "https://isena-fktp.vercel.app/",
   })
 );
 
