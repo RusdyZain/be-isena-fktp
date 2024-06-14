@@ -84,7 +84,7 @@ export const apotekerOnly = async (req, res, next) => {
   if (user.role !== "apoteker")
     return res
       .status(403)
-      .json({ msg: "Silahkan Login Menggunakan User Dokter dan Apoteker" });
+      .json({ msg: "Silahkan Login Menggunakan User Apoteker" });
   next();
 };
 
@@ -126,6 +126,6 @@ export const apotekOnly = async (req, res, next) => {
   if (user.role !== "apoteker" && user.role !== "dokter")
     return res
       .status(403)
-      .json({ msg: "Silahkan Login Menggunakan User Apoteker" });
+      .json({ msg: "Silahkan Login Menggunakan User Dokter dan Apoteker" });
   next();
 };
