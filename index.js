@@ -25,7 +25,6 @@ import DatasakitRoute from "./routes/datasakit_pegawai/DatasakitRoute.js";
 import HomevisitRoute from "./routes/datasakit_pegawai/HomevisitRoute.js";
 import TotalPenyakitRoute from "./routes/data_statistik/TotalPenyakitRoute.js";
 import DeletedataobatModel from "./routes/itemobat_apoteker/DeletedataobatRoute.js";
-import morgan from "morgan"; // Middleware logging
 
 dotenv.config();
 const app = express();
@@ -72,11 +71,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 // 5. Use routes - make sure this comes after the middleware setup
-app.use(UserRoute);
-app.use(AuthRoute);
-app.use(PasienRoute);
-
-// Gunakan semua route yang Anda miliki di sini
 app.use(UserRoute);
 app.use(AuthRoute);
 app.use(PasienRoute);
