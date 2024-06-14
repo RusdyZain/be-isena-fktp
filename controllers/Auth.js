@@ -71,6 +71,7 @@ export const postLogin = async (req, res) => {
         return res.status(500).json({ msg: "Terjadi kesalahan pada server" });
       }
 
+      res.set("Authorization", `Bearer ${accessToken}`);
       res.json({ accessToken });
     });
   } catch (error) {
