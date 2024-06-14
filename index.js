@@ -36,6 +36,15 @@ const store = new SequelizeSessionStore({
   db: db,
 });
 
+// 1. Enable CORS middleware before defining routes
+app.use(
+  cors({
+    credentials: true,
+    origin: "https://isena-fktp.vercel.app",
+  })
+);
+
+// 2. Set up session middleware
 app.use(
   session({
     secret: process.env.SESS_SECRET,
@@ -51,23 +60,20 @@ app.use(
   })
 );
 
+// 3. Sync database and session store
 (async () => {
   await db.sync();
   await store.sync();
 })();
 
-// Middleware logging
-app.use(morgan("dev"));
-
-app.use(
-  cors({
-    credentials: true,
-    origin: "https://isena-fktp.vercel.app",
-  })
-);
-
+// 4. Use JSON and cookie parser middleware
 app.use(express.json());
 app.use(cookieParser());
+
+// 5. Use routes - make sure this comes after the middleware setup
+app.use(UserRoute);
+app.use(AuthRoute);
+app.use(PasienRoute);
 
 // Gunakan semua route yang Anda miliki di sini
 app.use(UserRoute);
