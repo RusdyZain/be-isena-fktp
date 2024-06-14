@@ -1,5 +1,16 @@
 import jwt from "jsonwebtoken";
 import Users from "../models/UserModel.js";
+import express from "express";
+
+const app = express();
+
+app.use(
+  cors({
+    origin: "https://isena-fktp.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 export const verifyUser = async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
