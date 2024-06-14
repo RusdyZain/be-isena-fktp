@@ -61,7 +61,8 @@ export const postLogin = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: "none",
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
+      partitioned: true,
     });
 
     req.session.save((err) => {
@@ -104,6 +105,7 @@ export const deleteLogout = async (req, res) => {
     res.clearCookie("refreshToken", {
       sameSite: "none",
       secure: process.env.NODE_ENV === "production",
+      partitioned: true,
     });
 
     req.session.destroy((err) => {
