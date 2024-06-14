@@ -60,7 +60,7 @@ export const postLogin = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "lax",
+      sameSite: "none",
       secure: true,
     });
 
@@ -102,8 +102,8 @@ export const deleteLogout = async (req, res) => {
     );
 
     res.clearCookie("refreshToken", {
-      sameSite: "lax",
-      secure: true,
+      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
     });
 
     req.session.destroy((err) => {
