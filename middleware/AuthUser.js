@@ -2,34 +2,18 @@ import jwt from "jsonwebtoken";
 import Users from "../models/UserModel.js";
 
 export const verifyUser = async (req, res, next) => {
-  const authorizationHeader = req.headers.authorization;
-  console.log("authorizationHeader", authorizationHeader);
-
-  if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+  if (!req.session.userId) {
     return res.status(401).json({ msg: "Please login in your account!" });
   }
-
-  const token = authorizationHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const user = await Users.findOne({
-      where: {
-        uuid: decoded.uuid,
-      },
-    });
-
-    if (!user) {
-      return res.status(404).json({ msg: "User not found" });
-    }
-
-    req.userId = user.id;
-    req.role = user.role;
-    next();
-  } catch (error) {
-    console.error("Error verifying token:", error);
-    return res.status(401).json({ msg: "Invalid or expired token" });
-  }
+  const user = await Users.findOne({
+    where: {
+      uuid: req.session.userId,
+    },
+  });
+  if (!user) return res.status(404).json({ msg: "User not found" });
+  req.userId = user.id;
+  req.role = user.role;
+  next();
 };
 
 export const klinikOnly = async (req, res, next) => {
