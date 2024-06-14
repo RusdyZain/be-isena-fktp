@@ -4,7 +4,10 @@ import jwt from "jsonwebtoken";
 export const refreshToken = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) return res.sendStatus(401);
+    if (!refreshToken) {
+      console.log("No refresh token in cookies");
+      return res.sendStatus(401);
+    }
 
     const user = await Users.findOne({
       where: {
@@ -12,13 +15,19 @@ export const refreshToken = async (req, res) => {
       },
     });
 
-    if (!user) return res.sendStatus(401);
+    if (!user) {
+      console.log("Refresh token not found in database");
+      return res.sendStatus(401);
+    }
 
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       (err, decoded) => {
-        if (err) return res.sendStatus(403);
+        if (err) {
+          console.log("Failed to verify refresh token", err);
+          return res.sendStatus(403);
+        }
 
         const { uuid, username, email, satuankerja, role } = user;
 
@@ -34,7 +43,7 @@ export const refreshToken = async (req, res) => {
       }
     );
   } catch (error) {
-    console.error(error);
+    console.error("Error in refreshToken handler", error);
     res.sendStatus(500);
   }
 };
