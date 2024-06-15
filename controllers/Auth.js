@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import argon2 from "argon2";
 
 export const postLogin = async (req, res) => {
+  console.log("postLogin called");
   try {
     const user = await Users.findOne({
       where: {
@@ -11,17 +12,21 @@ export const postLogin = async (req, res) => {
     });
 
     if (!user) {
+      console.log("User not found");
       return res.status(404).json({ msg: "Akun tidak terdaftar" });
     }
 
     const match = await argon2.verify(user.password, req.body.password);
     if (!match) {
+      console.log("Password mismatch");
       return res
         .status(400)
         .json({ msg: "Password Salah. Silahkan Masukan Lagi!" });
     }
 
+    console.log("user.uuid :", user.uuid);
     req.session.userId = user.uuid;
+
     console.log("req.session.userId :", req.session.userId);
     req.session.userData = {
       uuid: user.uuid,
@@ -76,7 +81,7 @@ export const postLogin = async (req, res) => {
       res.json({ accessToken });
     });
   } catch (error) {
-    console.error(error);
+    console.error("postLogin error:", error);
     res.status(500).json({ msg: "Terjadi kesalahan pada server" });
   }
 };
