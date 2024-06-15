@@ -98,13 +98,6 @@ app.use(HomevisitRoute);
 app.use(TotalPenyakitRoute);
 app.use(DeletedataobatRoute);
 
-app.post("/pasiens", (req, res) => {
-  const sessionId = req.sessionID;
-  console.log("Session ID:", sessionId);
-
-  res.json({ message: "Data retrieved successfully" });
-});
-
 const PORT = process.env.APP_PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server up and running on port ${PORT}`);
