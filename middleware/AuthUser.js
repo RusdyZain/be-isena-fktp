@@ -1,6 +1,7 @@
 import Users from "../models/UserModel.js";
 
 export const verifyUser = async (req, res, next) => {
+  console.log("Verifying user :", req.session.userId);
   if (!req.session.userId) {
     return res.status(401).json({ msg: "Please login in your account!" });
   }
