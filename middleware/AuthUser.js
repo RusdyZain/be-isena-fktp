@@ -10,8 +10,14 @@ export const verifyUser = async (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
+
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!process.env.SESS_SECRET) {
+      console.error("SESS_SECRET tidak ditemukan dalam variabel lingkungan");
+      return res.status(500).json({ msg: "Internal server error" });
+    }
+
+    const decoded = jwt.verify(token, process.env.SESS_SECRET);
     console.log("Decoded Token:", decoded);
 
     const user = await Users.findOne({
@@ -19,14 +25,24 @@ export const verifyUser = async (req, res, next) => {
         uuid: decoded.uuid,
       },
     });
-    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    if (!user) {
+      console.error("User tidak ditemukan dengan UUID:", decoded.uuid);
+      return res.status(404).json({ msg: "User not found" });
+    }
 
     req.userId = user.id;
     req.role = user.role;
     next();
   } catch (error) {
-    console.log("Token verification error:", error);
-    return res.status(401).json({ msg: "Invalid token" });
+    console.error("Token verification error:", error);
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ msg: "Token expired" });
+    } else if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ msg: "Invalid token" });
+    } else {
+      return res.status(500).json({ msg: "Internal server error" });
+    }
   }
 };
 
