@@ -27,6 +27,7 @@ export const postLogin = async (req, res) => {
     console.log("user.uuid :", user.uuid);
     req.session.userId = user.uuid;
 
+    console.log("Session data:", req.session);
     console.log("req.session.userId :", req.session.userId);
     req.session.userData = {
       uuid: user.uuid,
