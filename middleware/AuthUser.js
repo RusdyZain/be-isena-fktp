@@ -1,58 +1,24 @@
-import jwt from "jsonwebtoken";
 import Users from "../models/UserModel.js";
 
 export const verifyUser = async (req, res, next) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ msg: "Please login in your account!" });
+  }
   try {
-    const authHeader = req.headers.authorization;
-    console.log("Authorization Header:", authHeader);
-
-    // Memeriksa apakah header Authorization ada dan dimulai dengan "Bearer "
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ msg: "No token provided" });
-    }
-
-    // Mengambil token dari header Authorization
-    const token = authHeader.split(" ")[1];
-
-    // Memverifikasi token menggunakan SESS_SECRET dari variabel lingkungan
-    if (!process.env.SESS_SECRET) {
-      console.error("SESS_SECRET tidak ditemukan dalam variabel lingkungan");
-      return res.status(500).json({ msg: "Internal server error" });
-    }
-
-    const decoded = jwt.verify(token, process.env.SESS_SECRET);
-    console.log("Decoded Token:", decoded);
-
-    // Mencari user berdasarkan UUID yang ada di dalam token
     const user = await Users.findOne({
       where: {
-        uuid: decoded.uuid,
+        uuid: req.session.userId,
       },
     });
-
-    // Jika user tidak ditemukan
     if (!user) {
-      console.error("User tidak ditemukan dengan UUID:", decoded.uuid);
       return res.status(404).json({ msg: "User not found" });
     }
-
-    // Menyimpan informasi user ke dalam objek req untuk digunakan di handler selanjutnya
     req.userId = user.id;
     req.role = user.role;
-
-    // Lanjut ke middleware atau handler berikutnya
     next();
   } catch (error) {
-    console.error("Token verification error:", error);
-
-    // Mengatasi jenis-jenis error yang mungkin terjadi pada verifikasi token
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ msg: "Token expired" });
-    } else if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ msg: "Invalid token" });
-    } else {
-      return res.status(500).json({ msg: "Internal server error" });
-    }
+    console.error("Error finding user:", error);
+    return res.status(500).json({ msg: "Internal server error" });
   }
 };
 
