@@ -5,6 +5,7 @@ import session from "express-session";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import SequelizeStore from "connect-session-sequelize";
+import helmet from "helmet";
 import UserRoute from "./routes/UserRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
 import PasienRoute from "./routes/PasienRoute.js";
@@ -45,7 +46,10 @@ app.use(
   })
 );
 
-// 2. Set up session middleware
+// 2. Set up helmet middleware
+app.use(helmet());
+
+// 3. Set up session middleware
 app.use(
   session({
     secret: process.env.SESS_SECRET,
@@ -61,18 +65,18 @@ app.use(
   })
 );
 
-// 3. Sync database and session store
+// 4. Sync database and session store
 (async () => {
   await db.sync();
   await store.sync();
 })();
 
-// 4. Use JSON and cookie parser middleware
+// 5. Use JSON and cookie parser middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// 5. Use routes - make sure this comes after the middleware setup
+// 6. Use routes - make sure this comes after the middleware setup
 app.use(UserRoute);
 app.use(AuthRoute);
 app.use(PasienRoute);
