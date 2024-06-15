@@ -25,7 +25,7 @@ import AuthPegawaiRoute from "./routes/AuthPegawaiRoute.js";
 import DatasakitRoute from "./routes/datasakit_pegawai/DatasakitRoute.js";
 import HomevisitRoute from "./routes/datasakit_pegawai/HomevisitRoute.js";
 import TotalPenyakitRoute from "./routes/data_statistik/TotalPenyakitRoute.js";
-import DeletedataobatModel from "./routes/itemobat_apoteker/DeletedataobatRoute.js";
+import DeletedataobatRoute from "./routes/itemobat_apoteker/DeletedataobatRoute.js";
 
 dotenv.config();
 const app = express();
@@ -57,10 +57,10 @@ app.use(
     saveUninitialized: false,
     store: store,
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // Waktu kedaluwarsa sesuai kebutuhan Anda
+      secure: process.env.NODE_ENV === "production", // Hanya aktifkan di production
+      sameSite: "none", // Penting untuk cross-site
+      httpOnly: true, // Hanya bisa diakses melalui HTTP/HTTPS
     },
   })
 );
@@ -96,7 +96,14 @@ app.use(AuthPegawaiRoute);
 app.use(DatasakitRoute);
 app.use(HomevisitRoute);
 app.use(TotalPenyakitRoute);
-app.use(DeletedataobatModel);
+app.use(DeletedataobatRoute);
+
+app.post("/pasiens", (req, res) => {
+  const sessionId = req.sessionID;
+  console.log("Session ID:", sessionId);
+
+  res.json({ message: "Data retrieved successfully" });
+});
 
 const PORT = process.env.APP_PORT || 5000;
 app.listen(PORT, () => {
