@@ -35,7 +35,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://be-isena-fktp.onrender.com",
+    origin: "https://isena-fktp.vercel.app/",
   })
 );
 
