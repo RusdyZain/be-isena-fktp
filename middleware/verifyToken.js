@@ -15,7 +15,9 @@ export const verifyToken = (req, res, next) => {
       return res.status(403).json({ message: "Gagal memverifikasi token" });
     }
 
+    req.userId = decoded.uuid;
     req.username = decoded.username;
+    req.role = decoded.role;
     next();
   });
 };
