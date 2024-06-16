@@ -26,6 +26,7 @@ import DeletedataobatRoute from "./routes/itemobat_apoteker/DeletedataobatRoute.
 import { verifyToken } from "./middleware/verifyToken.js";
 import { verifyUser } from "./middleware/AuthUser.js";
 import { refreshToken } from "./controllers/RefreshToken.js";
+import { deleteLogout, postLogin } from "./controllers/Auth.js";
 
 dotenv.config();
 
@@ -63,6 +64,8 @@ app.use(AuthRoute);
 app.use(verifyToken);
 app.use(verifyUser);
 app.get("/refresh-token", refreshToken);
+app.use(postLogin);
+app.use(deleteLogout);
 
 // Protected routes
 app.use(UserRoute);
