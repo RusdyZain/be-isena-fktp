@@ -18,7 +18,6 @@ export const verifyUser = async (req, res, next) => {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    // Update JWT token jika diperlukan
     const newToken = jwt.sign(
       {
         uuid: user.uuid,
