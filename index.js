@@ -37,8 +37,6 @@ app.use(
   cors({
     credentials: true,
     origin: "https://isena-fktp.vercel.app",
-    methods: ["GET", "POST", "DELETE", "PUT"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
