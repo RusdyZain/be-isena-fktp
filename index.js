@@ -47,7 +47,11 @@ app.use(
 );
 
 // 2. Set up helmet middleware
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 
 // 3. Set up session middleware
 app.use(
@@ -57,10 +61,10 @@ app.use(
     saveUninitialized: false,
     store: store,
     cookie: {
-      maxAge: 24 * 60 * 60 * 1000, // Waktu kedaluwarsa sesuai kebutuhan Anda
-      secure: process.env.NODE_ENV === "production", // Hanya aktifkan di production
-      sameSite: "none", // Penting untuk cross-site
-      httpOnly: true, // Hanya bisa diakses melalui HTTP/HTTPS
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      httpOnly: true,
     },
   })
 );
