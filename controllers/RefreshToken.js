@@ -29,17 +29,41 @@ export const refreshToken = async (req, res) => {
           return res.sendStatus(403);
         }
 
-        const { uuid, username, email, satuankerja, role } = user;
+        // Verify the access token from the request header
+        const authHeader = req.headers["authorization"];
+        const accessToken = authHeader && authHeader.split(" ")[1];
 
-        const accessToken = jwt.sign(
-          { uuid, username, email, satuankerja, role },
+        if (!accessToken) {
+          console.log("No access token in header");
+          return res.sendStatus(401);
+        }
+
+        jwt.verify(
+          accessToken,
           process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: "3600s",
+          (err, accessDecoded) => {
+            if (err && err.name === "TokenExpiredError") {
+              // If access token is expired, generate a new one
+              const { uuid, username, email, satuankerja, role } = user;
+
+              const newAccessToken = jwt.sign(
+                { uuid, username, email, satuankerja, role },
+                process.env.ACCESS_TOKEN_SECRET,
+                {
+                  expiresIn: "3600s",
+                }
+              );
+
+              return res.json({ accessToken: newAccessToken });
+            } else if (err) {
+              console.log("Failed to verify access token", err);
+              return res.sendStatus(403);
+            } else {
+              console.log("Access token is still valid");
+              return res.json({ accessToken });
+            }
           }
         );
-
-        res.json({ accessToken });
       }
     );
   } catch (error) {
