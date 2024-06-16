@@ -28,7 +28,6 @@ export const verifyUser = async (req, res, next) => {
       { expiresIn: "1d" }
     );
 
-    // Simpan token baru ke database
     await user.update({ jwt_token: newToken });
 
     req.userId = user.id;

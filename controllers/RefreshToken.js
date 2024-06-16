@@ -29,7 +29,6 @@ export const refreshToken = async (req, res) => {
           return res.sendStatus(403);
         }
 
-        // Verify the access token from the request header
         const authHeader = req.headers["authorization"];
         const accessToken = authHeader && authHeader.split(" ")[1];
 
@@ -43,7 +42,6 @@ export const refreshToken = async (req, res) => {
           process.env.ACCESS_TOKEN_SECRET,
           (err, accessDecoded) => {
             if (err && err.name === "TokenExpiredError") {
-              // If access token is expired, generate a new one
               const { uuid, username, email, satuankerja, role } = user;
 
               const newAccessToken = jwt.sign(
