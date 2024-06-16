@@ -1,5 +1,4 @@
 import Users from "../models/UserModel.js";
-import jwt from "jsonwebtoken";
 
 export const verifyUser = async (req, res, next) => {
   console.log("Verifying user with UUID:", req.userId);
@@ -18,18 +17,6 @@ export const verifyUser = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
-
-    const newToken = jwt.sign(
-      {
-        uuid: user.uuid,
-        username: user.username,
-        role: user.role,
-      },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1d" }
-    );
-
-    await user.update({ jwt_token: newToken });
 
     req.userId = user.id;
     req.role = user.role;
