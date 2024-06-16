@@ -16,6 +16,7 @@ export const verifyToken = (req, res, next) => {
     }
 
     req.userId = decoded.uuid;
+    console.log("req.userId:", req.userId);
     req.username = decoded.username;
     req.role = decoded.role;
     next();
