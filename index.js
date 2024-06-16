@@ -46,13 +46,26 @@ app.use(
   })
 );
 
+// Add this line to handle OPTIONS requests
+app.options(
+  "*",
+  cors({
+    credentials: true,
+    origin: "https://isena-fktp.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 // 2. Set up helmet middleware
 app.use(
   helmet({
     contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
   })
 );
 
+// 3. Set CORS headers manually
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://isena-fktp.vercel.app");
   res.header(
@@ -61,10 +74,11 @@ app.use((req, res, next) => {
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Credentials", "true");
+  console.log("CORS headers set for:", req.method, req.url); // Logging for debugging
   next();
 });
 
-// 3. Set up session middleware
+// 4. Set up session middleware
 app.use(
   session({
     secret: process.env.SESS_SECRET,
@@ -80,18 +94,18 @@ app.use(
   })
 );
 
-// 4. Sync database and session store
+// 5. Sync database and session store
 (async () => {
   await db.sync();
   await store.sync();
 })();
 
-// 5. Use JSON and cookie parser middleware
+// 6. Use JSON and cookie parser middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// 6. Use routes - make sure this comes after the middleware setup
+// 7. Use routes - make sure this comes after the middleware setup
 app.use(UserRoute);
 app.use(AuthRoute);
 app.use(PasienRoute);
