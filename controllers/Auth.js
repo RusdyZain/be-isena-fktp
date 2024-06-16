@@ -24,7 +24,6 @@ export const postLogin = async (req, res) => {
         .json({ msg: "Password Salah. Silahkan Masukan Lagi!" });
     }
 
-    console.log("user.uuid :", user.uuid);
     req.session.userId = user.uuid;
 
     console.log("Session data:", req.session);

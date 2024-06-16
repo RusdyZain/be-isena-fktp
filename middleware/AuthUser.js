@@ -1,23 +1,36 @@
 import Users from "../models/UserModel.js";
 
 export const verifyUser = async (req, res, next) => {
-  console.log("Session data:", req.session);
-  console.log("Verifying user :", req.session.userId);
+  console.log("Verifying user with UUID:", req.userId);
 
-  if (!req.session.userId) {
+  if (!req.userId) {
     return res.status(401).json({ msg: "Please login in your account!" });
   }
 
   try {
     const user = await Users.findOne({
       where: {
-        uuid: req.session.userId,
+        uuid: req.userId,
       },
     });
 
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
+
+    // Update JWT token jika diperlukan
+    const newToken = jwt.sign(
+      {
+        uuid: user.uuid,
+        username: user.username,
+        role: user.role,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    // Simpan token baru ke database
+    await user.update({ jwt_token: newToken });
 
     req.userId = user.id;
     req.role = user.role;
