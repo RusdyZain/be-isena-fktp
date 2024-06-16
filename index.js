@@ -36,7 +36,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://isena-fktp.vercel.app/",
+    origin: "https://isena-fktp.vercel.app",
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -64,8 +64,6 @@ app.use(AuthRoute);
 app.use(verifyToken);
 app.use(verifyUser);
 app.get("/refresh-token", refreshToken);
-app.use(postLogin);
-app.use(deleteLogout);
 
 // Protected routes
 app.use(UserRoute);
