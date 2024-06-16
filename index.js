@@ -1,10 +1,7 @@
 import express from "express";
 import db from "./config/Database.js";
 import cors from "cors";
-import session from "express-session";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import SequelizeStore from "connect-session-sequelize";
 import helmet from "helmet";
 import UserRoute from "./routes/UserRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
@@ -26,34 +23,19 @@ import DatasakitRoute from "./routes/datasakit_pegawai/DatasakitRoute.js";
 import HomevisitRoute from "./routes/datasakit_pegawai/HomevisitRoute.js";
 import TotalPenyakitRoute from "./routes/data_statistik/TotalPenyakitRoute.js";
 import DeletedataobatRoute from "./routes/itemobat_apoteker/DeletedataobatRoute.js";
+import { verifyToken } from "./middleware/verifyToken.js";
+import { verifyUser } from "./middleware/AuthUser.js";
+import { refreshToken } from "./controllers/RefreshToken.js";
 
 dotenv.config();
+
 const app = express();
-
-const SequelizeSessionStore = SequelizeStore(session.Store);
-
-const store = new SequelizeSessionStore({
-  db: db,
-});
 
 // 1. Enable CORS middleware before defining routes
 app.use(
   cors({
     credentials: true,
-    origin: "https://isena-fktp.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-// Add this line to handle OPTIONS requests
-app.options(
-  "*",
-  cors({
-    credentials: true,
-    origin: "https://isena-fktp.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "http://localhost:5173",
   })
 );
 
@@ -65,49 +47,23 @@ app.use(
   })
 );
 
-// 3. Set CORS headers manually
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://isena-fktp.vercel.app");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Credentials", "true");
-  console.log("CORS headers set for:", req.method, req.url); // Logging for debugging
-  next();
-});
-
-// 4. Set up session middleware
-app.use(
-  session({
-    secret: process.env.SESS_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: store,
-    cookie: {
-      maxAge: 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      httpOnly: true,
-    },
-  })
-);
-
-// 5. Sync database and session store
-(async () => {
-  await db.sync();
-  await store.sync();
-})();
-
-// 6. Use JSON and cookie parser middleware
+// 3. Use JSON middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
 
-// 7. Use routes - make sure this comes after the middleware setup
-app.use(UserRoute);
+// 4. Sync database
+(async () => {
+  await db.sync();
+})();
+
+// 5. Use routes - make sure this comes after the middleware setup
 app.use(AuthRoute);
+app.use(verifyToken);
+app.use(verifyUser);
+app.get("/refresh-token", refreshToken);
+
+// Protected routes
+app.use(UserRoute);
 app.use(PasienRoute);
 app.use(AuthPasienRoute);
 app.use(KeadaanfisikRoute);

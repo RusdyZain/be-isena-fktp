@@ -140,6 +140,7 @@ export const createPasien = async (req, res) => {
     norm,
     role,
   } = req.body;
+
   try {
     await Pasiens.create({
       nobpjs: nobpjs,
@@ -151,7 +152,7 @@ export const createPasien = async (req, res) => {
       nohp: nohp,
       norm: norm,
       role: role,
-      userId: req.userId,
+      userId: req.userDbId,
     });
     res.status(201).json({ msg: "Data Pasien Berhasil Dimasukan!" });
   } catch (error) {
@@ -159,7 +160,9 @@ export const createPasien = async (req, res) => {
       "Error menambahkan pasien:",
       error.response ? error.response.data : error.message
     );
-    setMsg(error.response ? error.response.data : error.message);
+    res
+      .status(500)
+      .json({ msg: error.response ? error.response.data : error.message });
   }
 };
 

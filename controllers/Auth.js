@@ -24,20 +24,6 @@ export const postLogin = async (req, res) => {
         .json({ msg: "Password Salah. Silahkan Masukan Lagi!" });
     }
 
-    req.session.userId = user.uuid;
-    req.userId = user.uuid;
-
-    console.log("Session data:", req.session);
-    console.log("req.session.userId :", req.session.userId);
-    console.log("req.userId:", req.userId);
-    req.session.userData = {
-      uuid: user.uuid,
-      username: user.username,
-      email: user.email,
-      satuankerja: user.satuankerja,
-      role: user.role,
-    };
-
     const { uuid, username, email, satuankerja, role } = user;
 
     const accessToken = jwt.sign(
@@ -56,6 +42,7 @@ export const postLogin = async (req, res) => {
       }
     );
 
+    // Update jwt_token in database
     await Users.update(
       { jwt_token: refreshToken },
       {
@@ -65,23 +52,27 @@ export const postLogin = async (req, res) => {
       }
     );
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "none",
-      secure: process.env.NODE_ENV === "production",
-      partitioned: true,
-    });
+    // Initialize req.session if not already initialized
+    if (!req.session) {
+      req.session = {};
+    }
 
-    req.session.save((err) => {
-      if (err) {
-        console.error("Session save error:", err);
-        return res.status(500).json({ msg: "Terjadi kesalahan pada server" });
-      }
+    // Set userId in req object
+    req.session.userId = user.uuid;
+    req.userId = user.uuid;
 
-      res.set("Authorization", `Bearer ${accessToken}`);
-      res.json({ accessToken });
-    });
+    // Save session
+    req.session.userData = {
+      uuid: user.uuid,
+      username: user.username,
+      email: user.email,
+      satuankerja: user.satuankerja,
+      role: user.role,
+    };
+
+    // Send tokens in response
+    res.set("Authorization", `Bearer ${accessToken}`);
+    res.json({ accessToken, refreshToken });
   } catch (error) {
     console.error("postLogin error:", error);
     res.status(500).json({ msg: "Terjadi kesalahan pada server" });
@@ -90,42 +81,40 @@ export const postLogin = async (req, res) => {
 
 export const deleteLogout = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) return res.sendStatus(204);
+    const refreshToken = req.body.refreshToken;
 
-    const user = await Users.findAll({
+    if (!refreshToken) {
+      return res.sendStatus(401);
+    }
+
+    const decodedToken = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    const user = await Users.findOne({
       where: {
+        uuid: decodedToken.uuid,
         jwt_token: refreshToken,
       },
     });
 
-    if (!user[0]) return res.sendStatus(204);
+    if (!user) {
+      return res.sendStatus(404);
+    }
 
-    const userId = user[0].id;
     await Users.update(
       { jwt_token: null },
       {
         where: {
-          id: userId,
+          uuid: decodedToken.uuid,
         },
       }
     );
 
-    res.clearCookie("refreshToken", {
-      sameSite: "none",
-      secure: process.env.NODE_ENV === "production",
-      partitioned: true,
-    });
-
-    req.session.destroy((err) => {
-      if (err) {
-        console.error(err);
-        return res.status(400).json({ msg: "Logout Failed!" });
-      }
-      res.status(200).json({ msg: "Successfully logged out" });
-    });
+    res.status(200).json({ msg: "Successfully logged out" });
   } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
+    console.error("Error during logout:", error);
+    res.status(500).json({ msg: "Failed to logout" });
   }
 };

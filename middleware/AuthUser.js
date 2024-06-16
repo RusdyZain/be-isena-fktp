@@ -15,11 +15,12 @@ export const verifyUser = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(404).json({ msg: "User not found" });
+      return res.status(404).json({ msg: "User not found at Verify User" });
     }
 
-    req.userId = user.id;
-    req.role = user.role;
+    req.userDbId = user.id;
+    req.userRole = user.role;
+    console.log("User role:", user.role);
     next();
   } catch (error) {
     console.error("Error finding user:", error);
@@ -27,100 +28,33 @@ export const verifyUser = async (req, res, next) => {
   }
 };
 
-export const klinikOnly = async (req, res, next) => {
-  const user = await Users.findOne({
-    where: {
-      uuid: req.session.userId,
-    },
-  });
-  if (!user) return res.status(404).json({ msg: "User not found" });
-  if (user.role !== "admin" && user.role !== "dokter")
-    return res
-      .status(403)
-      .json({ msg: "Silahkan Login Menggunakan User Admin atau Dokter" });
-  next();
-};
-
-export const dokterOnly = async (req, res, next) => {
-  const user = await Users.findOne({
-    where: {
-      uuid: req.session.userId,
-    },
-  });
-  if (!user) return res.status(404).json({ msg: "User not found" });
-  if (user.role !== "dokter")
-    return res
-      .status(403)
-      .json({ msg: "Silahkan Login Menggunakan User Dokter" });
-  next();
-};
-
-export const adminOnly = async (req, res, next) => {
-  const user = await Users.findOne({
-    where: {
-      uuid: req.session.userId,
-    },
-  });
-  if (!user) return res.status(404).json({ msg: "User not found" });
-  if (user.role !== "admin")
-    return res
-      .status(403)
-      .json({ msg: "Silahkan Login Menggunakan User Admin" });
-  next();
-};
-
-export const apotekerOnly = async (req, res, next) => {
-  const user = await Users.findOne({
-    where: {
-      uuid: req.session.userId,
-    },
-  });
-  if (!user) return res.status(404).json({ msg: "User not found" });
-  if (user.role !== "apoteker")
-    return res
-      .status(403)
-      .json({ msg: "Silahkan Login Menggunakan User Apoteker" });
-  next();
-};
-
-export const pawasOnly = async (req, res, next) => {
-  const user = await Users.findOne({
-    where: {
-      uuid: req.session.userId,
-    },
-  });
-  if (!user) return res.status(404).json({ msg: "User not found" });
-  if (user.role !== "pawas")
-    return res.status(403).json({
-      msg: "Silahkan Login Menggunakan User Perwira Pengawas (PAWAS)",
+const checkRole = (roles) => async (req, res, next) => {
+  try {
+    const user = await Users.findOne({
+      where: {
+        uuid: req.userId,
+      },
     });
-  next();
+
+    if (!user) {
+      return res.status(404).json({ msg: `User not found at ${req.userId}` });
+    }
+
+    if (!roles.includes(user.role)) {
+      return res.status(403).json({ msg: "Access denied" });
+    }
+
+    next();
+  } catch (error) {
+    console.error("Error finding user:", error);
+    return res.status(500).json({ msg: "Internal server error" });
+  }
 };
 
-export const statistikOnly = async (req, res, next) => {
-  const user = await Users.findOne({
-    where: {
-      uuid: req.session.userId,
-    },
-  });
-  if (!user) return res.status(404).json({ msg: "User not found" });
-  if (user.role !== "statistik")
-    return res
-      .status(403)
-      .json({ msg: "Silahkan Login Menggunakan User Statistik" });
-  next();
-};
-
-export const apotekOnly = async (req, res, next) => {
-  const user = await Users.findOne({
-    where: {
-      uuid: req.session.userId,
-    },
-  });
-  if (!user) return res.status(404).json({ msg: "User not found" });
-  if (user.role !== "apoteker" && user.role !== "dokter")
-    return res
-      .status(403)
-      .json({ msg: "Silahkan Login Menggunakan User Dokter dan Apoteker" });
-  next();
-};
+export const klinikOnly = checkRole(["admin", "dokter"]);
+export const dokterOnly = checkRole(["dokter"]);
+export const adminOnly = checkRole(["admin"]);
+export const apotekerOnly = checkRole(["apoteker"]);
+export const pawasOnly = checkRole(["pawas"]);
+export const statistikOnly = checkRole(["statistik"]);
+export const apotekOnly = checkRole(["apoteker", "dokter"]);

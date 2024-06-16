@@ -3,9 +3,10 @@ import jwt from "jsonwebtoken";
 
 export const refreshToken = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const { refreshToken } = req.query;
+
     if (!refreshToken) {
-      console.log("No refresh token in cookies");
+      console.log("No refresh token in query");
       return res.sendStatus(401);
     }
 
@@ -23,45 +24,30 @@ export const refreshToken = async (req, res) => {
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
-      (err, decoded) => {
+      async (err, decoded) => {
         if (err) {
           console.log("Failed to verify refresh token", err);
           return res.sendStatus(403);
         }
 
-        const authHeader = req.headers["authorization"];
-        const accessToken = authHeader && authHeader.split(" ")[1];
+        const { exp: accessTokenExpiry } = decoded;
 
-        if (!accessToken) {
-          console.log("No access token in header");
-          return res.sendStatus(401);
+        if (accessTokenExpiry > Date.now() / 1000) {
+          console.log("Access token is still valid, no need to refresh");
+          return res.status(200).json({ accessToken: null });
         }
 
-        jwt.verify(
-          accessToken,
+        const { uuid, username, email, satuankerja, role } = user;
+
+        const newAccessToken = jwt.sign(
+          { uuid, username, email, satuankerja, role },
           process.env.ACCESS_TOKEN_SECRET,
-          (err, accessDecoded) => {
-            if (err && err.name === "TokenExpiredError") {
-              const { uuid, username, email, satuankerja, role } = user;
-
-              const newAccessToken = jwt.sign(
-                { uuid, username, email, satuankerja, role },
-                process.env.ACCESS_TOKEN_SECRET,
-                {
-                  expiresIn: "3600s",
-                }
-              );
-
-              return res.json({ accessToken: newAccessToken });
-            } else if (err) {
-              console.log("Failed to verify access token", err);
-              return res.sendStatus(403);
-            } else {
-              console.log("Access token is still valid");
-              return res.json({ accessToken });
-            }
+          {
+            expiresIn: "1h",
           }
         );
+
+        return res.json({ accessToken: newAccessToken });
       }
     );
   } catch (error) {
