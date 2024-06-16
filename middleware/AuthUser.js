@@ -1,4 +1,5 @@
 import Users from "../models/UserModel.js";
+import jwt from "jsonwebtoken";
 
 export const verifyUser = async (req, res, next) => {
   console.log("Verifying user with UUID:", req.userId);
