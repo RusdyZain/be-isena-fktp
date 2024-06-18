@@ -26,7 +26,6 @@ import DeletedataobatRoute from "./routes/itemobat_apoteker/DeletedataobatRoute.
 import { verifyToken } from "./middleware/verifyToken.js";
 import { verifyUser } from "./middleware/AuthUser.js";
 import { refreshToken } from "./controllers/RefreshToken.js";
-import { deleteLogout, postLogin } from "./controllers/Auth.js";
 
 dotenv.config();
 
@@ -36,7 +35,8 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://isena-fktp.vercel.app",
+    // origin: "https://isena-fktp.vercel.app",
+    origin: "http://localhost:5173",
   })
 );
 

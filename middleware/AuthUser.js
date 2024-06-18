@@ -19,7 +19,6 @@ export const verifyUser = async (req, res, next) => {
     }
 
     req.userDbId = user.id;
-    req.userRole = user.role;
     console.log("User role:", user.role);
     next();
   } catch (error) {
@@ -55,6 +54,6 @@ export const klinikOnly = checkRole(["admin", "dokter"]);
 export const dokterOnly = checkRole(["dokter"]);
 export const adminOnly = checkRole(["admin"]);
 export const apotekerOnly = checkRole(["apoteker"]);
-export const pawasOnly = checkRole(["pawas"]);
+export const pawasOnly = checkRole(["pegawai"]);
 export const statistikOnly = checkRole(["statistik"]);
 export const apotekOnly = checkRole(["apoteker", "dokter"]);

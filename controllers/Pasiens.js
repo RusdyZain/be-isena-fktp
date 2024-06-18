@@ -3,13 +3,13 @@ import Users from "../models/UserModel.js";
 
 export const getPasiens = async (req, res) => {
   try {
-    let response;
+    let pasiens;
     if (
       req.role === "admin" ||
       req.role === "dokter" ||
       req.role === "apoteker"
     ) {
-      response = await Pasiens.findAll({
+      pasiens = await Pasiens.findAll({
         attributes: [
           "uuid",
           "nobpjs",
@@ -30,7 +30,7 @@ export const getPasiens = async (req, res) => {
         ],
       });
     } else {
-      response = await Pasiens.findAll({
+      pasiens = await Pasiens.findAll({
         attributes: [
           "uuid",
           "nobpjs",
@@ -54,7 +54,7 @@ export const getPasiens = async (req, res) => {
         ],
       });
     }
-    res.status(200).json(response);
+    res.status(200).json(pasiens);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -68,6 +68,7 @@ export const getPasienById = async (req, res) => {
       },
     });
     if (!pasien) return res.status(404).json({ msg: "Data not found!" });
+
     let response;
     if (
       req.role === "admin" ||
@@ -123,6 +124,31 @@ export const getPasienById = async (req, res) => {
       });
     }
     res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+export const getPasienByNoBPJS = async (req, res) => {
+  console.log("Nomor BPJS:", req.params.nobpjs);
+  try {
+    const pasien = await Pasiens.findOne({
+      where: {
+        nobpjs: req.params.nobpjs,
+      },
+      include: [
+        {
+          model: Users,
+          attributes: ["username", "email"],
+        },
+      ],
+    });
+    if (!pasien) {
+      return res
+        .status(404)
+        .json({ msg: "Pasien dengan nomor BPJS ini tidak ditemukan." });
+    }
+    res.status(200).json(pasien);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
