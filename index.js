@@ -61,7 +61,6 @@ app.use(express.json());
 app.use(AuthRoute);
 app.use(verifyToken);
 app.use(verifyUser);
-app.get("/refresh-token", refreshToken);
 
 // Protected routes
 app.use(UserRoute);

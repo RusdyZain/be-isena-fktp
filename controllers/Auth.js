@@ -30,7 +30,7 @@ export const postLogin = async (req, res) => {
       { uuid, username, email, satuankerja, role },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "360s",
+        expiresIn: "15m  ",
       }
     );
 
@@ -38,7 +38,7 @@ export const postLogin = async (req, res) => {
       { uuid, username, email, satuankerja, role },
       process.env.REFRESH_TOKEN_SECRET,
       {
-        expiresIn: "3600s",
+        expiresIn: "1h",
       }
     );
 

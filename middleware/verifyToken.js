@@ -18,6 +18,7 @@ export const verifyToken = (req, res, next) => {
     req.userId = decoded.uuid;
     req.username = decoded.username;
     req.role = decoded.role;
+    console.log("Token berhasil diverifikasi, userId:", req.userId);
     next();
   });
 };
