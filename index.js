@@ -35,8 +35,8 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    // origin: "https://isena-fktp.vercel.app",
-    origin: "http://localhost:5173",
+    origin: "https://isena-fktp.vercel.app",
+    // origin: "http://localhost:5173",
   })
 );
 
