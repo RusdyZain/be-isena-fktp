@@ -1,12 +1,16 @@
 GET http://localhost:5000/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzExNmYzMDAtNTc1OC00YTljLTk0NjEtNDRiZTYyYzQwNzZmIiwidXNlcm5hbWUiOiJub3ZhIiwiZW1haWwiOiJub3ZhQGFkbWluLmNvbSIsInNhdHVhbmtlcmphIjoiS2Fwb2xyZXMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MTc2MTU0NjEsImV4cCI6MTcxNzYxNTQ3Nn0.V_R2SGlMHCjOSYbMcyrZdbs-nvv3A74GVVUo6g0PfNk
 ###
-POST http://localhost:5000/login
+POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "username": "nova",
-    "password": "123"
+    "username": "daden",
+    "email": "daden@pegawai.com", 
+    "password": "123",
+    "confPassword": "123",
+    "satuankerja": "Kapolres",
+    "role": "pawas"
 }
 
 ###
@@ -15,6 +19,8 @@ GET http://localhost:5000/token
 ###
 DELETE http://localhost:5000/logout
 Content-Type: application/json
+
+
 
 
 

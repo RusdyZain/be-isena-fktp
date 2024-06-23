@@ -1,7 +1,6 @@
 import express from "express";
 import { postLogin, deleteLogout } from "../controllers/Auth.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
-import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 

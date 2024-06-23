@@ -30,7 +30,7 @@ export const postLogin = async (req, res) => {
       { uuid, username, email, satuankerja, role },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "15m  ",
+        expiresIn: "360s",
       }
     );
 
@@ -38,7 +38,7 @@ export const postLogin = async (req, res) => {
       { uuid, username, email, satuankerja, role },
       process.env.REFRESH_TOKEN_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "3600s",
       }
     );
 
@@ -81,10 +81,10 @@ export const postLogin = async (req, res) => {
 
 export const deleteLogout = async (req, res) => {
   try {
-    const refreshToken = req.body.refreshToken;
+    const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      return res.sendStatus(401);
+      return res.sendStatus(401); // Unauthorized
     }
 
     const decodedToken = jwt.verify(
@@ -100,7 +100,7 @@ export const deleteLogout = async (req, res) => {
     });
 
     if (!user) {
-      return res.sendStatus(404);
+      return res.sendStatus(404); // Not Found
     }
 
     await Users.update(
@@ -115,6 +115,6 @@ export const deleteLogout = async (req, res) => {
     res.status(200).json({ msg: "Successfully logged out" });
   } catch (error) {
     console.error("Error during logout:", error);
-    res.status(500).json({ msg: "Failed to logout" });
+    res.status(500).json({ msg: "Failed to logout" }); // Internal Server Error
   }
 };
