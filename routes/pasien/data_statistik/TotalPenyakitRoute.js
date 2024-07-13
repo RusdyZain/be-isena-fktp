@@ -2,8 +2,7 @@ import express from "express";
 import {
   getTotalPenyakits,
   deleteTotalPenyakit,
-} from "../../../controllers/pasien/data_statistik/Totalpenyakits.js";
-
+} from "../../../controllers/pasien/data_statistik/TotalPenyakits.js";
 import { statistikOnly } from "../../../middleware/userOnly.js";
 
 const router = express.Router();

@@ -6,7 +6,7 @@ import helmet from "helmet";
 
 import UserRoute from "./routes/UserRoute.js";
 import AuthRoute from "./routes//login/AuthRoute.js";
-import TokenRoute from "./routes//login/TokenRoute.js"; // Perbarui import ini
+import TokenRoute from "./routes//login/TokenRoute.js";
 
 import PasienRoute from "./routes/pasien/PasienRoute.js";
 import AuthPasienRoute from "./routes/pasien/AuthPasienRoute.js";
