@@ -1,4 +1,4 @@
-import TotalPenyakit from "../../../models/pasien/data_statistik/TotalpenyakitModel.js";
+import TotalPenyakit from "../../../models/pasien/data_statistik/TotalPenyakitModel.js";
 import Users from "../../../models/UserModel.js";
 
 export const getTotalPenyakits = async (req, res) => {
