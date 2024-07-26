@@ -198,15 +198,7 @@ export const deleteObat = async (req, res) => {
       },
     });
     if (!itemobat) return res.status(404).json({ msg: "Data not found!" });
-    const {
-      jenisobat1,
-      jenisobat2,
-      jenisobat3,
-      jenisobat4,
-      jenisobat5,
-      BMHP,
-      status,
-    } = req.body;
+
     if (req.role === "dokter" || req.role === "admin") {
       await Obats.destroy({
         where: {
