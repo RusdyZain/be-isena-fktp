@@ -6,7 +6,7 @@ import helmet from "helmet";
 
 import UserRoute from "./routes/UserRoute.js";
 import AuthRoute from "./routes//login/AuthRoute.js";
-import TokenRoute from "./routes//login/TokenRoute.js"; // Perbarui import ini
+import TokenRoute from "./routes//login/TokenRoute.js";
 
 import PasienRoute from "./routes/pasien/PasienRoute.js";
 import AuthPasienRoute from "./routes/pasien/AuthPasienRoute.js";
@@ -21,7 +21,7 @@ import PemeriksaanRoute from "./routes/pasien/dokter/datakunjungan/PemeriksaanRo
 import RiwayatalergiRoute from "./routes/pasien/dokter/datakunjungan/RiwayatalergiRoute.js";
 import TandatanganRoute from "./routes/pasien/dokter/datakunjungan/TandatanganRoute.js";
 
-import TotalpenyakitRoute from "./routes/pasien/data_statistik/TotalpenyakitRoute.js";
+import TotalpenyakitRoute from "./routes/pasien/data_statistik/TotalPenyakitRoute.js";
 
 import PegawaiRoute from "./routes/pegawai/PegawaiRoute.js";
 import AuthPegawaiRoute from "./routes/pegawai/AuthPegawaiRoute.js";
@@ -90,7 +90,6 @@ app.use(PegawaiRoute);
 app.use(AuthPegawaiRoute);
 app.use(DatasakitRoute);
 app.use(HomevisitRoute);
-app.use(TotalpenyakitRoute);
 app.use(DeletedataobatRoute);
 app.use(TotalpenyakitRoute);
 app.use(Datarekammedis);
