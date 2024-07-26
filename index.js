@@ -21,8 +21,6 @@ import PemeriksaanRoute from "./routes/pasien/dokter/datakunjungan/PemeriksaanRo
 import RiwayatalergiRoute from "./routes/pasien/dokter/datakunjungan/RiwayatalergiRoute.js";
 import TandatanganRoute from "./routes/pasien/dokter/datakunjungan/TandatanganRoute.js";
 
-import TotalPenyakitRoute from "./routes/pasien/data_statistik/TotalPenyakitRoute.js";
-
 import PegawaiRoute from "./routes/pegawai/PegawaiRoute.js";
 import AuthPegawaiRoute from "./routes/pegawai/AuthPegawaiRoute.js";
 import DatasakitRoute from "./routes/pegawai/datasakit/DatasakitRoute.js";
@@ -88,7 +86,6 @@ app.use(TandatanganRoute);
 app.use(DataobatRoute);
 app.use(PegawaiRoute);
 app.use(AuthPegawaiRoute);
-app.use(TotalPenyakitRoute);
 app.use(DatasakitRoute);
 app.use(HomevisitRoute);
 app.use(DeletedataobatRoute);
