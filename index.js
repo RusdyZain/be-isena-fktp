@@ -21,7 +21,7 @@ import PemeriksaanRoute from "./routes/pasien/dokter/datakunjungan/PemeriksaanRo
 import RiwayatalergiRoute from "./routes/pasien/dokter/datakunjungan/RiwayatalergiRoute.js";
 import TandatanganRoute from "./routes/pasien/dokter/datakunjungan/TandatanganRoute.js";
 
-import TotalpenyakitRoute from "./routes/pasien/data_statistik/TotalPenyakitRoute.js";
+import TotalPenyakitRoute from "./routes/pasien/data_statistik/TotalPenyakitRoute.js";
 
 import PegawaiRoute from "./routes/pegawai/PegawaiRoute.js";
 import AuthPegawaiRoute from "./routes/pegawai/AuthPegawaiRoute.js";
@@ -91,7 +91,7 @@ app.use(AuthPegawaiRoute);
 app.use(DatasakitRoute);
 app.use(HomevisitRoute);
 app.use(DeletedataobatRoute);
-app.use(TotalpenyakitRoute);
+app.use(TotalPenyakitRoute);
 app.use(Datarekammedis);
 
 const PORT = process.env.APP_PORT || 5000;
