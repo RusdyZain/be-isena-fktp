@@ -136,7 +136,7 @@ export const getDatarekammedisByPegawaiId = async (req, res) => {
 };
 
 export const createDatarekammedis = async (req, res) => {
-  const { keterangan, pegawaiId , filerekammedis} = req.body;
+  const { keterangan, pegawaiId, filerekammedis} = req.body;
   // const filePath = req.file.path.replace("uploads\\", "");
   // const filerekammedis = filePath;
 

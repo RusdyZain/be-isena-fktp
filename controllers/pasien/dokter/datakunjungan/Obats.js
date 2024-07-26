@@ -129,7 +129,7 @@ export const getObatByStatus = async (req, res) => {
 };
 
 export const createObat = async (req, res) => {
-  const { jenisobat, dosis, BMHP, pasienId } = req.body;
+  const { jenisobat, BMHP, pasienId } = req.body;
 
   const processedJenisObat = jenisobat.map((item) =>
     item.trim() === "" ? null : item
@@ -142,7 +142,6 @@ export const createObat = async (req, res) => {
       jenisobat3: processedJenisObat[2],
       jenisobat4: processedJenisObat[3],
       jenisobat5: processedJenisObat[4],
-      dosis: dosis,
       BMHP: BMHP,
       status: false,
       pasienId: pasienId,
