@@ -25,7 +25,6 @@ const Obats = db.define(
     jenisobat2: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: null,
       validate: {
         notEmpty: true,
       },
@@ -33,7 +32,6 @@ const Obats = db.define(
     jenisobat3: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: null,
       validate: {
         notEmpty: true,
       },
@@ -41,7 +39,6 @@ const Obats = db.define(
     jenisobat4: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: null,
       validate: {
         notEmpty: true,
       },
@@ -49,7 +46,6 @@ const Obats = db.define(
     jenisobat5: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: null,
       validate: {
         notEmpty: true,
       },
