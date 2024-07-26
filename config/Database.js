@@ -1,10 +1,10 @@
-// import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
 
-// const db = new Sequelize("apiisena_db", "root", "", {
-//   host: "localhost",
-//   dialect: "mysql",
-// });
-// export default db;
+const db = new Sequelize("apiisena_db", "root", "", {
+  host: "localhost",
+  dialect: "mysql",
+});
+export default db;
 
 import { Sequelize } from "sequelize";
 

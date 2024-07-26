@@ -5,7 +5,11 @@ import { Op } from "sequelize";
 export const getPengajuans = async (req, res) => {
   try {
     let response;
-    if (req.role === "dokter" || req.role === "admin") {
+    if (
+      req.role === "dokter" ||
+      req.role === "admin" ||
+      req.role === "kepala bidang"
+    ) {
       response = await Pengajuans.findAll({
         attributes: [
           "uuid",
@@ -56,6 +60,49 @@ export const getPengajuanById = async (req, res) => {
     const pengajuan = await Pengajuans.findOne({
       where: {
         uuid: req.params.id,
+      },
+    });
+
+    if (!pengajuan) return res.status(404).json({ msg: "Data not found!" });
+
+    let response;
+    if (req.role === "admin" || req.role === "dokter") {
+      response = await Pengajuans.findOne({
+        where: {
+          id: pengajuan.id,
+        },
+        include: [
+          {
+            model: Pasiens,
+            attributes: ["uuid", "nama", "nobpjs"],
+          },
+        ],
+      });
+    } else {
+      response = await Pengajuans.findOne({
+        where: {
+          [Op.and]: [{ id: pengajuan.id }, { pasienId: req.pasienId }],
+        },
+        include: [
+          {
+            model: Pasiens,
+            attributes: ["uuid", "nama", "nobpjs"],
+          },
+        ],
+      });
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+export const getPengajuanByIdPrimary = async (req, res) => {
+  try {
+    const pengajuan = await Pengajuans.findOne({
+      where: {
+        pasienId: req.params.id,
       },
     });
 

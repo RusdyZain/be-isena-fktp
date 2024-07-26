@@ -6,7 +6,7 @@ import helmet from "helmet";
 
 import UserRoute from "./routes/UserRoute.js";
 import AuthRoute from "./routes//login/AuthRoute.js";
-import TokenRoute from "./routes//login/TokenRoute.js";
+import TokenRoute from "./routes//login/TokenRoute.js"; // Perbarui import ini
 
 import PasienRoute from "./routes/pasien/PasienRoute.js";
 import AuthPasienRoute from "./routes/pasien/AuthPasienRoute.js";
@@ -21,7 +21,7 @@ import PemeriksaanRoute from "./routes/pasien/dokter/datakunjungan/PemeriksaanRo
 import RiwayatalergiRoute from "./routes/pasien/dokter/datakunjungan/RiwayatalergiRoute.js";
 import TandatanganRoute from "./routes/pasien/dokter/datakunjungan/TandatanganRoute.js";
 
-import TotalpenyakitRoute from "./routes/pasien/data_statistik/TotalPenyakitRoute.js";
+import TotalpenyakitRoute from "./routes/pasien/data_statistik/TotalpenyakitRoute.js";
 
 import PegawaiRoute from "./routes/pegawai/PegawaiRoute.js";
 import AuthPegawaiRoute from "./routes/pegawai/AuthPegawaiRoute.js";
@@ -32,17 +32,18 @@ import DataobatRoute from "./routes/apotek/DataobatRoute.js";
 import DeletedataobatRoute from "./routes/apotek/DeletedataobatRoute.js";
 
 import { verifyToken, verifyUser } from "./middleware/verify.js";
+import Datarekammedis from "./routes/pegawai/datasakit/DatarekammedisRoute.js";
 
 dotenv.config();
 
 const app = express();
+app.use(express.static("uploads"));
 
 // 1. Enable CORS middleware before defining routes
 app.use(
   cors({
     credentials: true,
-    // origin: "http://localhost:5173",
-    origin: "https://isena-fktp.vercel.app",
+    origin: ["http://localhost:5173", "https://akusehat.vercel.app"],
   })
 );
 
@@ -92,6 +93,7 @@ app.use(HomevisitRoute);
 app.use(TotalpenyakitRoute);
 app.use(DeletedataobatRoute);
 app.use(TotalpenyakitRoute);
+app.use(Datarekammedis);
 
 const PORT = process.env.APP_PORT || 5000;
 app.listen(PORT, () => {
