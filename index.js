@@ -88,10 +88,10 @@ app.use(TandatanganRoute);
 app.use(DataobatRoute);
 app.use(PegawaiRoute);
 app.use(AuthPegawaiRoute);
+app.use(TotalPenyakitRoute);
 app.use(DatasakitRoute);
 app.use(HomevisitRoute);
 app.use(DeletedataobatRoute);
-app.use(TotalPenyakitRoute);
 app.use(Datarekammedis);
 
 const PORT = process.env.APP_PORT || 5000;
